@@ -15,5 +15,8 @@
     "morgan": "~1.9.1",
     "nodemon": "^2.0.7",
     "nunjucks": "^3.2.3"
+  },
+  "devDependencies": {
+    "mongodb": "^3.6.9"
   }
 }

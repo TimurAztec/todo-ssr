@@ -4,6 +4,11 @@
 {% endblock %}
 {% block content %}
 <div class="container">
-    <h1>{{title}}</h1>
+  <h2>{{ title }}</h2>
+  <input type="text" id="postInput"><button id="createButton">Create</button>
+  {% for item in list %}
+  <div>{{ item.name }}</div>
+  {% endfor %}
+    <script src="javascripts/index.js"></script>
 </div>
 {% endblock %}
