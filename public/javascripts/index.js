@@ -13,6 +13,10 @@ document.querySelector('#createButton').onclick = () => {
 }
 
 document.querySelectorAll('.item').forEach((item) => {
+    item.querySelector('.editButton').onclick = () => {
+        window.location = `http://localhost:3000/edit/${item.attributes.itemid.value}`
+    }
+
     item.querySelector('.deleteButton').onclick = () => {
         fetch('http://localhost:3000/api/todo', {
             method: 'DELETE',

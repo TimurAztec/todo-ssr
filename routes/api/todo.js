@@ -4,7 +4,6 @@ const uri = "mongodb+srv://common_user:usage@shash.fmuxn.mongodb.net/shashin?ret
 
 async function TodosController(req, res, next) {
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-    console.log(req.method, typeof req.method);
     if (req.method === 'POST') {
         await client.connect(err => {
             const collection = client.db("todo").collection("todos");
@@ -18,7 +17,19 @@ async function TodosController(req, res, next) {
         await client.connect(err => {
             const collection = client.db("todo").collection("todos");
             console.log(req.body.id);
-            collection.deleteOne({_id: new mongo.ObjectID(req.body.id)}, ).then((dbres) => {
+            collection.deleteOne({_id: new mongo.ObjectID(req.body.id)} ).then((dbres) => {
+                res.send(dbres);
+                client.close();
+            });
+        });
+    }
+    if (req.method === 'PUT') {
+        await client.connect(err => {
+            const collection = client.db("todo").collection("todos");
+            collection.updateOne(
+                {_id: new mongo.ObjectID(req.body.id)},
+                {$set: {value: req.body.value}},
+                ).then((dbres) => {
                 res.send(dbres);
                 client.close();
             });
