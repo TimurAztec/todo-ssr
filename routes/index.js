@@ -4,16 +4,16 @@ const uri = "mongodb+srv://common_user:usage@shash.fmuxn.mongodb.net/shashin?ret
 async function IndexController(pageRoute, req, res, next) {
     this.pageRoute = pageRoute || '';
     this.pageData = {
-        title: 'index'
+        title: 'TODO list'
     };
 
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     await client.connect(err => {
-        const collection = client.db("shashin").collection("posts");
+        const collection = client.db("todo").collection("todos");
         collection.find({}).toArray().then((dbres) => {
-            console.log(dbres);
             this.pageData.list = dbres;
             res.render(this.pageRoute, this.pageData);
+
             client.close();
         });
     });
