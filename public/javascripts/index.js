@@ -1,5 +1,5 @@
 document.querySelector('#signoutButton').onclick = () => {
-    fetch('http://localhost:3000/api/auth/signout', {
+    fetch(`${process.env.HOST}api/auth/signout`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -12,7 +12,7 @@ document.querySelector('#signoutButton').onclick = () => {
 
 document.querySelector('#createButton').onclick = () => {
     if (document.querySelector('#postInput').value) {
-        fetch('http://localhost:3000/api/todo', {
+        fetch(`${process.env.HOST}api/todo`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -26,11 +26,11 @@ document.querySelector('#createButton').onclick = () => {
 
 document.querySelectorAll('.item').forEach((item) => {
     item.querySelector('.editButton').onclick = () => {
-        window.location = `http://localhost:3000/edit/${item.attributes.itemid.value}`
+        window.location = `${process.env.HOST}edit/${item.attributes.itemid.value}`
     }
 
     item.querySelector('.deleteButton').onclick = () => {
-        fetch('http://localhost:3000/api/todo', {
+        fetch(`${process.env.HOST}api/todo`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
