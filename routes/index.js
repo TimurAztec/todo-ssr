@@ -10,33 +10,18 @@ async function IndexController(req, res, next) {
     };
     const client = new MongoClient(uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
-    if (!req.cookies || !Object.values(req.cookies).length || !req.cookies.sessionId) {
-        await AuthController(req, res, next);
-        return;
-    }
-
     try {
         await client.connect(err => {
-            let collection = client.db("todo").collection("sessions");
+            let collection = client.db("todo").collection("users");
+            collection.findOne({_id: mongo.ObjectID(req.session.userId)}).then((user) => {
+                collection = client.db("todo").collection("todos");
+                collection.find({userId: String(user._id)}).toArray().then((todos) => {
+                    this.pageData.list = todos;
+                    this.pageData.user = user;
+                    res.render(this.pageRoute, this.pageData);
 
-            collection.findOne({_id: new mongo.ObjectID(req.cookies.sessionId)}).then((session) => {
-                if (!session) {
-                    AuthController(req, res, next);
-                    throw 'Session not found!';
-                }
-
-                collection = client.db("todo").collection("users");
-                collection.findOne({_id: mongo.ObjectID(session.userId)}).then((user) => {
-                    collection = client.db("todo").collection("todos");
-                    collection.find({userId: String(user._id)}).toArray().then((todos) => {
-                        this.pageData.list = todos;
-                        this.pageData.user = user;
-                        res.render(this.pageRoute, this.pageData);
-
-                        client.close();
-                    });
+                    client.close();
                 });
-
             });
         });
     } catch (e) {

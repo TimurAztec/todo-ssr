@@ -6,18 +6,24 @@ let TodosController = require('./api/todo');
 const AuthSignUpAPIController = require("./api/signup");
 const AuthSignInAPIController = require("./api/signin");
 const AuthSignOutAPIController = require("./api/signout");
+const SessionHandler = require("./sessionHandler");
+const AuthController = require("./auth");
 
 router
     .route('/')
-    .get((req, res, next) => IndexController(req, res, next));
+    .get(SessionHandler, IndexController);
 
 router
     .route('/edit/:todoid')
-    .get((req, res, next) => EditController(req, res, next));
+    .get(SessionHandler, EditController);
+
+router
+    .route('/auth')
+    .all(AuthController);
 
 router
     .route('/api/todo')
-    .all(TodosController);
+    .all(SessionHandler, TodosController);
 
 router
     .route('/api/auth/signup')

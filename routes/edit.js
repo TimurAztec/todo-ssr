@@ -9,30 +9,16 @@ async function EditController(req, res, next) {
         title: 'TODO edit'
     };
 
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-
-    if (!req.cookies || !Object.values(req.cookies).length || !req.cookies.sessionId) {
-        await AuthController(req, res, next);
-        return;
-    }
+    const client = new MongoClient(uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
     try {
         await client.connect(err => {
-            let collection = client.db("todo").collection("sessions");
+            const collection = client.db("todo").collection("todos");
+            collection.findOne({_id: new mongo.ObjectID(req.params.todoid)}).then((dbres) => {
+                this.pageData.item = dbres;
+                res.render(this.pageRoute, this.pageData);
 
-            collection.findOne({_id: new mongo.ObjectID(req.cookies.sessionId)}).then((session) => {
-                if (!session) {
-                    AuthController(req, res, next);
-                    throw 'Session not found!';
-                }
-
-                const collection = client.db("todo").collection("todos");
-                collection.findOne({_id: new mongo.ObjectID(req.params.todoid)}).then((dbres) => {
-                    this.pageData.item = dbres;
-                    res.render(this.pageRoute, this.pageData);
-
-                    client.close();
-                });
+                client.close();
             });
         });
     } catch (e) {

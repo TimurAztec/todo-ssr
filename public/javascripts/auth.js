@@ -10,7 +10,7 @@ document.querySelector('#loginButton').onclick = () => {
                 password: document.querySelector('#passwordInput').value,
             })
         }).then(() => {
-            document.location.reload();
+            window.location = `http://localhost:3000/`;
         })
     }
 };
@@ -28,7 +28,7 @@ document.querySelector('#registerButton').onclick = () => {
                 info: document.querySelector('#aboutInput').value
             })
         }).then(() => {
-            document.location.reload();
+            window.location = `http://localhost:3000/`;
         })
     }
 };
