@@ -1,7 +1,5 @@
 const mongo = require('mongodb');
-const AuthController = require("./auth");
 const MongoClient = mongo.MongoClient;
-const uri = "mongodb+srv://common_user:usage@shash.fmuxn.mongodb.net/shashin?retryWrites=true&w=majority";
 
 async function EditController(req, res, next) {
     this.pageRoute = 'edit';
@@ -9,7 +7,7 @@ async function EditController(req, res, next) {
         title: 'TODO edit'
     };
 
-    const client = new MongoClient(uri, {useNewUrlParser: true, useUnifiedTopology: true});
+    const client = new MongoClient(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true});
 
     try {
         await client.connect(err => {

@@ -1,14 +1,12 @@
 const mongo = require('mongodb');
 const MongoClient = mongo.MongoClient;
-const uri = "mongodb+srv://common_user:usage@shash.fmuxn.mongodb.net/shashin?retryWrites=true&w=majority";
-let AuthController = require('./auth');
 
 async function IndexController(req, res, next) {
     this.pageRoute = 'index';
     this.pageData = {
         title: 'TODO list'
     };
-    const client = new MongoClient(uri, {useNewUrlParser: true, useUnifiedTopology: true});
+    const client = new MongoClient(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true});
 
     try {
         await client.connect(err => {

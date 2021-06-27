@@ -1,17 +1,15 @@
 const mongo = require('mongodb');
 const moment = require('moment');
 const MongoClient = mongo.MongoClient;
-const uri = "mongodb+srv://common_user:usage@shash.fmuxn.mongodb.net/shashin?retryWrites=true&w=majority";
-let AuthController = require('./auth');
 
 async function SessionHandler(req, res, next) {
     if (!req.cookies || !Object.values(req.cookies).length || !req.cookies.sessionId) {
-        await AuthController(req, res, next);
+        res.redirect('/auth');
         return;
     }
 
     try {
-        const client = new MongoClient(uri, {useNewUrlParser: true, useUnifiedTopology: true});
+        const client = new MongoClient(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true});
         await client.connect(err => {
             let collection = client.db("todo").collection("sessions");
 
