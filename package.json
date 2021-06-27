@@ -18,6 +18,10 @@
     "nodemon": "^2.0.7",
     "nunjucks": "^3.2.3"
   },
+  "engines": {
+    "node": "14.0.0",
+    "npm": "6.14.4"
+  },
   "devDependencies": {
     "mongodb": "^3.6.9"
   }
