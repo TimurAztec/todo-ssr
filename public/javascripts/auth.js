@@ -1,6 +1,6 @@
 document.querySelector('#loginButton').onclick = () => {
     if (document.querySelector('#loginInput').value && document.querySelector('#passwordInput').value) {
-        fetch(`${process.env.HOST}api/auth/signin`, {
+        fetch(`/api/auth/signin`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -10,14 +10,14 @@ document.querySelector('#loginButton').onclick = () => {
                 password: document.querySelector('#passwordInput').value,
             })
         }).then(() => {
-            window.location = `${process.env.HOST}`;
+            window.location = `/`;
         })
     }
 };
 
 document.querySelector('#registerButton').onclick = () => {
     if (document.querySelector('#loginInput').value && document.querySelector('#passwordInput').value) {
-        fetch(`${process.env.HOST}api/auth/signup`, {
+        fetch(`/api/auth/signup`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -28,7 +28,7 @@ document.querySelector('#registerButton').onclick = () => {
                 info: document.querySelector('#aboutInput').value
             })
         }).then(() => {
-            window.location = `${process.env.HOST}`;
+            window.location = `/`;
         })
     }
 };

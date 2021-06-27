@@ -1,6 +1,6 @@
 document.querySelector('#editButton').onclick = () => {
     if (document.querySelector('#editInput').value) {
-        fetch(`${process.env.HOST}api/todo`, {
+        fetch(`/api/todo`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -10,7 +10,7 @@ document.querySelector('#editButton').onclick = () => {
                 value: document.querySelector('#editInput').value
             })
         }).then((res) => {
-            window.location = `${process.env.HOST}`;
+            window.location = `/`;
         })
     }
 }
