@@ -1,3 +1,15 @@
+document.querySelector('#signoutButton').onclick = () => {
+    fetch('http://localhost:3000/api/auth/signout', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({})
+    }).then((res) => {
+        document.location.reload();
+    })
+}
+
 document.querySelector('#createButton').onclick = () => {
     if (document.querySelector('#postInput').value) {
         fetch('http://localhost:3000/api/todo', {

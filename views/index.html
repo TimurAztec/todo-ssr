@@ -5,6 +5,8 @@
 {% block content %}
 <div class="container">
   <h2>{{ title }}</h2>
+  <div style="display: flex; width: 100%; align-items: center;"><h3>{{ user.login }}</h3><button id="signoutButton" style="height: 24px">Sign out</button></div>
+  <p>{{ user.info }}</p>
   <input type="text" id="postInput"><button id="createButton">Add +</button>
   {% for item in list %}
   <div itemid="{{ item._id }}" class="item"><span style="display: inline-block; min-width: 178px; text-overflow: clip;">{{ item.value }}</span>

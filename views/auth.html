@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block css %}
+<link rel="stylesheet" href="stylesheets/style.css">
+{% endblock %}
+{% block content %}
+<div class="container">
+  <h2>{{ title }}</h2>
+  <h4>Login *</h4>
+  <input id="loginInput">
+  <h4>Password *</h4>
+  <input id="passwordInput">
+  <h4>About you *</h4>
+  <textarea id="aboutInput"></textarea>
+  <button id="loginButton">Login</button>
+  <button id="registerButton">Register</button>
+  <script src="javascripts/auth.js"></script>
+</div>
+{% endblock %}
