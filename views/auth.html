@@ -5,14 +5,24 @@
 {% block content %}
 <div class="container">
   <h2>{{ title }}</h2>
+
+  <form action="/api/auth/signin" method="post" enctype="multipart/form-data">
   <h4>Login *</h4>
-  <input id="loginInput">
+  <input name="login">
   <h4>Password *</h4>
-  <input id="passwordInput">
-  <h4>About you *</h4>
-  <textarea id="aboutInput"></textarea>
-  <button id="loginButton">Login</button>
-  <button id="registerButton">Register</button>
-  <script src="javascripts/auth.js"></script>
+  <input name="password">
+  <button id="loginButton" type="submit">Login</button>
+  </form>
+  <hr>
+  <form action="/api/auth/signup" method="post" enctype="multipart/form-data">
+    <h4>Login *</h4>
+    <input name="login">
+    <h4>Password *</h4>
+    <input name="password">
+    <h4>About you *</h4>
+    <textarea name="info"></textarea>
+    <button id="registerButton" type="submit">Register</button>
+  </form>
+
 </div>
 {% endblock %}

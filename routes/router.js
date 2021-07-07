@@ -8,6 +8,7 @@ const AuthSignInAPIController = require("./api/signin");
 const AuthSignOutAPIController = require("./api/signout");
 const SessionHandler = require("./sessionHandler");
 const AuthController = require("./auth");
+const upload = require('multer')();
 
 router
     .route('/')
@@ -23,18 +24,26 @@ router
 
 router
     .route('/api/todo')
-    .all(SessionHandler, TodosController);
+    .post(SessionHandler, upload.none(), TodosController);
+
+router
+    .route('/api/todo/delete')
+    .post(SessionHandler, upload.none(), TodosController);
+
+router
+    .route('/api/todo/update')
+    .post(SessionHandler, upload.none(), TodosController);
 
 router
     .route('/api/auth/signup')
-    .all(AuthSignUpAPIController);
+    .post(upload.none(), AuthSignUpAPIController);
 
 router
     .route('/api/auth/signin')
-    .all(AuthSignInAPIController);
+    .post(upload.none(),AuthSignInAPIController);
 
 router
     .route('/api/auth/signout')
-    .all(AuthSignOutAPIController);
+    .post(upload.none(), AuthSignOutAPIController);
 
 module.exports = router;

@@ -4,30 +4,31 @@ const crypto = require('crypto');
 const moment = require('moment');
 
 async function AuthSignInAPIController(req, res, next) {
-    const client = new MongoClient(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true });
-    if (req.method === 'POST') {
-        await client.connect(err => {
-            let collection = client.db("todo").collection("users");
-            collection.findOne({
-                login: req.body.login,
-                password: crypto.createHash('sha256').update(req.body.password).digest('hex'),
-            }).then((user) => {
-                if (user) {
-                    collection = client.db("todo").collection("sessions");
-                    collection.insertOne({
-                        expires: moment().add(1, 'minutes').toISOString(),
-                        userId: String(user._id)
-                    }).then((session) => {
-                        res.cookie('sessionId', String(session.ops[0]._id), {httpOnly: true, expires: moment().add(10, 'minutes').toDate()});
-                        res.send(session);
-                        client.close();
+    const client = new MongoClient(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true});
+    await client.connect(err => {
+        let collection = client.db("todo").collection("users");
+        collection.findOne({
+            login: req.body.login,
+            password: crypto.createHash('sha256').update(req.body.password).digest('hex'),
+        }).then((user) => {
+            if (user) {
+                collection = client.db("todo").collection("sessions");
+                collection.insertOne({
+                    expires: moment().add(10, 'minutes').toISOString(),
+                    userId: String(user._id)
+                }).then((session) => {
+                    res.cookie('sessionId', String(session.ops[0]._id), {
+                        httpOnly: true,
+                        expires: moment().add(10, 'minutes').toDate()
                     });
-                } else {
-                    res.send('Wrong creds');
-                }
-            });
+                    res.redirect('/');
+                    client.close();
+                });
+            } else {
+                res.send('Wrong creds');
+            }
         });
-    }
+    });
 }
 
 module.exports = AuthSignInAPIController;

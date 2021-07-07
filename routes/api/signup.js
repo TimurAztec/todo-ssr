@@ -19,14 +19,14 @@ async function AuthSignUpAPIController(req, res, next) {
                     }).then((user) => {
                         collection = client.db("todo").collection("sessions");
                         collection.insertOne({
-                            expires: moment().add(1, 'minutes').toISOString(),
+                            expires: moment().add(10, 'minutes').toISOString(),
                             userId: String(user.ops[0]._id)
                         }).then((session) => {
                             res.cookie('sessionId', String(session.ops[0]._id), {
                                 httpOnly: true,
-                                expires: moment().add(1, 'minutes').toDate()
+                                expires: moment().add(10, 'minutes').toDate()
                             });
-                            res.send(session);
+                            res.redirect('/');
                             client.close();
                         });
                     });

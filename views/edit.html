@@ -5,7 +5,11 @@
 {% block content %}
 <div class="container">
     <h2>{{ title }}</h2>
-    <input type="text" id="editInput" value="{{ item.value }}" itemid="{{ item._id }}"><button id="editButton">Edit</button>
-    <script src="/javascripts/edit.js"></script>
+    <form action="/api/todo/update" method="post" enctype="multipart/form-data">
+        <input type="text" name="id" value="{{ item._id }}" style="display:none;">
+        <input type="text" name="value" value="{{ item.value }}">
+        <button id="editButton" type="submit">Edit</button>
+    </form>
+<!--    <script src="/javascripts/edit.js"></script>-->
 </div>
 {% endblock %}
