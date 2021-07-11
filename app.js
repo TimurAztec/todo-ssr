@@ -9,6 +9,7 @@ let router = require('./routes/router');
 
 let app = express();
 const nunjucks = require('nunjucks');
+const {clearSessions} = require("./routes/clearSessions");
 nunjucks.configure('views', {
   autoescape: true,
   express: app
@@ -41,5 +42,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+clearSessions();
 
 module.exports = app;
