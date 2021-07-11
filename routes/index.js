@@ -1,4 +1,5 @@
 const mongo = require('mongodb');
+const {getUsersOnline} = require("./chat");
 const MongoClient = mongo.MongoClient;
 
 async function IndexController(req, res, next) {
@@ -9,19 +10,20 @@ async function IndexController(req, res, next) {
     const client = new MongoClient(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true});
 
     try {
-        await client.connect(err => {
-            let collection = client.db("todo").collection("users");
-            collection.findOne({_id: mongo.ObjectID(req.session.userId)}).then((user) => {
-                collection = client.db("todo").collection("todos");
-                collection.find({userId: String(user._id)}).toArray().then((todos) => {
-                    this.pageData.list = todos;
-                    this.pageData.user = user;
-                    res.render(this.pageRoute, this.pageData);
+        await client.connect();
+        let collection = await client.db("todo").collection("users");
+        let user = await collection.findOne({_id: mongo.ObjectID(req.session.userId)});
+        collection = await client.db("todo").collection("todos");
+        let todos = await collection.find({userId: String(user._id)}).toArray();
+        let users = await getUsersOnline();
+        this.pageData.list = todos;
+        this.pageData.user = user;
+        this.pageData.chat = {
+            users: users
+        };
+        await res.render(this.pageRoute, this.pageData);
 
-                    client.close();
-                });
-            });
-        });
+        await client.close();
     } catch (e) {
         console.error(e);
     }

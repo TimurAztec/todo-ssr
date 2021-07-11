@@ -1,0 +1,11 @@
+<div style="position: fixed; bottom: 0px; right: 0px;">
+    <div>
+        <h4>Users online: </h4>
+        <ul>
+            {% for item in chat.users %}
+            <li><span>{{ item.login }}</span>|<span>{{ item.info }}</span></li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+<script src="javascripts/chat.js"></script>

@@ -1,4 +1,5 @@
 const mongo = require('mongodb');
+const {getUsersOnline} = require("./chat");
 const MongoClient = mongo.MongoClient;
 
 async function EditController(req, res, next) {
@@ -10,15 +11,17 @@ async function EditController(req, res, next) {
     const client = new MongoClient(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true});
 
     try {
-        await client.connect(err => {
-            const collection = client.db("todo").collection("todos");
-            collection.findOne({_id: new mongo.ObjectID(req.params.todoid)}).then((dbres) => {
-                this.pageData.item = dbres;
-                res.render(this.pageRoute, this.pageData);
+        await client.connect();
+        const collection = await client.db("todo").collection("todos");
+        let item = await collection.findOne({_id: new mongo.ObjectID(req.params.todoid)});
+        let users = await getUsersOnline();
+        this.pageData.item = item;
+        this.pageData.chat = {
+            users: users
+        };
+        await res.render(this.pageRoute, this.pageData);
 
-                client.close();
-            });
-        });
+        await client.close();
     } catch (e) {
         console.error(e);
     }
