@@ -1,4 +1,4 @@
-webSocket = new WebSocket(`ws://${window.location.hostname}:3000`);
+webSocket = new WebSocket(`wss://${window.location.hostname}:3000`);
 webSocket.onopen = (event) => {
     webSocket.send("online-update");
     let onlineActivity = setInterval(() => {
@@ -20,5 +20,15 @@ webSocket.onmessage = (event) => {
             onlineUsersHtml += `<li><span>${user.login} | ${user.info}</span></li>`
         });
         $('#onlineUsersList').html(onlineUsersHtml);
+        setUserActions();
     }
 };
+
+function setUserActions() {
+    $('#onlineUsersList').find('li').click((el) => {
+        $('#onlineUsersList').find('li').find('span')
+            .css("background-color", "white")
+            .css("cursor", "pointer")
+        el.target.style.backgroundColor = 'blue';
+    });
+}
