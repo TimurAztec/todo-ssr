@@ -22,28 +22,35 @@ router
     .route('/auth')
     .all(AuthController);
 
-router
-    .route('/api/todo')
+let apiRouter = express.Router({mergeParams: true});
+let todoRouter = express.Router({mergeParams: true});
+let authRouter = express.Router({mergeParams: true});
+apiRouter.use('/todo', todoRouter);
+apiRouter.use('/auth', authRouter);
+router.use('/api', apiRouter);
+
+todoRouter
+    .route('/')
     .post(SessionHandler, upload.none(), TodosController);
 
-router
-    .route('/api/todo/delete')
+todoRouter
+    .route('/delete')
     .post(SessionHandler, upload.none(), TodosController);
 
-router
-    .route('/api/todo/update')
+todoRouter
+    .route('/update')
     .post(SessionHandler, upload.none(), TodosController);
 
-router
-    .route('/api/auth/signup')
+authRouter
+    .route('/signup')
     .post(upload.none(), AuthSignUpAPIController);
 
-router
-    .route('/api/auth/signin')
+authRouter
+    .route('/signin')
     .post(upload.none(),AuthSignInAPIController);
 
-router
-    .route('/api/auth/signout')
+authRouter
+    .route('/signout')
     .post(upload.none(), AuthSignOutAPIController);
 
 module.exports = router;

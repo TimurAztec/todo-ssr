@@ -5,7 +5,7 @@ async function TodosController(req, res, next) {
     const client = new MongoClient(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true});
     await client.connect(err => {
         let collection;
-        if (req.url === '/api/todo') {
+        if (req.url === '/') {
             collection = client.db("todo").collection("users");
             collection.findOne({_id: new mongo.ObjectID(req.session.userId)}).then((user) => {
                 if (user) {
@@ -19,14 +19,14 @@ async function TodosController(req, res, next) {
                 }
             });
         }
-        if (req.url === '/api/todo/delete') {
+        if (req.url === '/delete') {
             collection = client.db("todo").collection("todos");
             collection.deleteOne({_id: new mongo.ObjectID(req.body.id)}).then((dbres) => {
                 res.redirect('/');
                 client.close();
             });
         }
-        if (req.url === '/api/todo/update') {
+        if (req.url === '/update') {
             collection = client.db("todo").collection("todos");
             collection.updateOne(
                 {_id: new mongo.ObjectID(req.body.id)},
