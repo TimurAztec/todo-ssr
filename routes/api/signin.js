@@ -15,7 +15,8 @@ async function AuthSignInAPIController(req, res, next) {
                 collection = client.db("todo").collection("sessions");
                 collection.insertOne({
                     expires: moment().add(10, 'minutes').toISOString(),
-                    userId: String(user._id)
+                    userId: String(user._id),
+                    online: false
                 }).then((session) => {
                     res.cookie('sessionId', String(session.ops[0]._id), {
                         httpOnly: true,

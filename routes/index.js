@@ -1,5 +1,4 @@
 const mongo = require('mongodb');
-const {getUsersOnline} = require("./chat");
 const MongoClient = mongo.MongoClient;
 
 async function IndexController(req, res, next) {
@@ -15,12 +14,8 @@ async function IndexController(req, res, next) {
         let user = await collection.findOne({_id: mongo.ObjectID(req.session.userId)});
         collection = await client.db("todo").collection("todos");
         let todos = await collection.find({userId: String(user._id)}).toArray();
-        let users = await getUsersOnline();
         this.pageData.list = todos;
         this.pageData.user = user;
-        this.pageData.chat = {
-            users: users
-        };
         await res.render(this.pageRoute, this.pageData);
 
         await client.close();

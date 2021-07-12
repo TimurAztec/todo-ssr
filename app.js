@@ -9,7 +9,8 @@ let router = require('./routes/router');
 
 let app = express();
 const nunjucks = require('nunjucks');
-const {clearSessions} = require("./routes/clearSessions");
+const {clearOfflineUsers} = require("./scripts/clearSessions");
+const {clearSessions} = require("./scripts/clearSessions");
 nunjucks.configure('views', {
   autoescape: true,
   express: app
@@ -44,5 +45,6 @@ app.use(function(err, req, res, next) {
 });
 
 clearSessions();
+let clearOfflineUsersInterval = setInterval(clearOfflineUsers, 30000);
 
 module.exports = app;

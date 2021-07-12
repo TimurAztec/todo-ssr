@@ -6,7 +6,7 @@ let TodosController = require('./api/todo');
 const AuthSignUpAPIController = require("./api/signup");
 const AuthSignInAPIController = require("./api/signin");
 const AuthSignOutAPIController = require("./api/signout");
-const SessionHandler = require("./sessionHandler");
+const SessionHandler = require("../scripts/sessionHandler");
 const AuthController = require("./auth");
 const upload = require('multer')();
 
