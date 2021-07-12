@@ -1,4 +1,5 @@
-webSocket = new WebSocket(`wss://${window.location.hostname}:3000`);
+webSocket = new WebSocket(`${location.host.split(':')[1] === '443' ? 'wss' : 'ws'}://${location.host}`);
+
 webSocket.onopen = (event) => {
     webSocket.send("online-update");
     let onlineActivity = setInterval(() => {

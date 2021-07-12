@@ -14,7 +14,7 @@ var SocketsHandler = require("../scripts/socketsHandler");
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || '443' || '80' || '3000');
 app.set('port', port);
 
 /**
@@ -22,7 +22,7 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
-var webSocketServer = new webSocket.Server({ server });
+var webSocketServer = new webSocket.Server({server});
 
 SocketsHandler(webSocketServer);
 
