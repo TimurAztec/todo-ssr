@@ -1,5 +1,4 @@
-console.log(`${location.protocol === 'https' ? 'wss' : 'ws'}://${location.host}`);
-webSocket = new WebSocket(`${(location.host.split(':')[1] === '443' || location.protocol === 'https') ? 'wss' : 'ws'}://${location.host}`);
+webSocket = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`);
 
 webSocket.onopen = (event) => {
     webSocket.send("online-update");
