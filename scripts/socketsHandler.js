@@ -13,6 +13,10 @@ function SocketsHandler(webSocketServer) {
                 cookies[name] = value;
             });
 
+            getUser(cookies['sessionId']).then((user) => {
+                client.userId = String(user._id);
+            });
+
             client.on('message', (data) => {
                 try {
                     let res = JSON.parse(data);
@@ -29,6 +33,11 @@ function SocketsHandler(webSocketServer) {
                     if (res.action === 'sendChat' && cookies['sessionId']) {
                         sendChat(cookies['sessionId'], res.uid, res.text).then((chatStory) => {
                             client.send(JSON.stringify({action: 'sendChat', chatStory}));
+                            webSocketServer.clients.forEach((tclient) => {
+                                if (tclient.userId === res.uid) {
+                                    tclient.send(JSON.stringify({action: 'sendChat', chatStory}));
+                                }
+                            });
                         });
                     }
                 } catch (e) {
@@ -39,6 +48,17 @@ function SocketsHandler(webSocketServer) {
     } catch (e) {
         console.error(e);
     }
+}
+
+async function getUser(sessionId) {
+    const client = new MongoClient(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true});
+    await client.connect();
+    let collection = await client.db("todo").collection("sessions");
+    let session = await collection.findOne({_id: new mongo.ObjectID(sessionId)});
+    collection = await client.db("todo").collection("users");
+    let user = await collection.findOne({_id: new mongo.ObjectID(session.userId)});
+    await client.close();
+    return user;
 }
 
 async function onlineUpdate(sessionId) {
@@ -73,12 +93,14 @@ async function getChat(sessionId, targetUserId) {
     collection = await client.db("todo").collection("chats");
     let chat = await collection.findOne({users: {$all: [String(user._id), targetUserId]}});
     if (chat) {
+        await client.close();
         return chat.messages;
     } else {
         chat = await collection.insertOne({
             messages: [],
             users: [String(user._id), targetUserId]
         });
+        await client.close();
         return chat.messages;
     }
 }
@@ -99,6 +121,7 @@ async function sendChat(sessionId, targetUserId, text) {
             }
         });
         chat = await collection.findOne({_id: chat._id});
+        await client.close();
         return chat.messages;
     } else {
         chat = await collection.insertOne({
@@ -111,6 +134,7 @@ async function sendChat(sessionId, targetUserId, text) {
             }
         });
         chat = await collection.findOne({_id: chat._id});
+        await client.close();
         return chat.messages;
     }
 }
