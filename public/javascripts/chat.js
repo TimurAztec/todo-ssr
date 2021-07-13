@@ -1,9 +1,11 @@
+let selectedUser = '';
+
 webSocket = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`);
 
 webSocket.onopen = (event) => {
-    webSocket.send("online-update");
+    webSocket.send(JSON.stringify({action: "onlineUpdate"}));
     let onlineActivity = setInterval(() => {
-        webSocket.send("online-update");
+        webSocket.send(JSON.stringify({action: "onlineUpdate"}));
     }, 5000);
 };
 
@@ -16,20 +18,45 @@ webSocket.onmessage = (event) => {
         reader.readAsText(event.data);
     } else {
         let res = JSON.parse(event.data);
-        let onlineUsersHtml = '';
-        res.forEach((user) => {
-            onlineUsersHtml += `<li><span>${user.login} | ${user.info}</span></li>`
-        });
-        $('#onlineUsersList').html(onlineUsersHtml);
-        setUserActions();
+        let updateHtml = '';
+        if (res.action === 'onlineUpdate') {
+            res.onlineUsers.forEach((user) => {
+                updateHtml += `<li><span userid="${user._id}">${user.login} | ${user.info}</span></li>`
+            });
+            $('#onlineUsersList').html(updateHtml);
+            setUserActions();
+        }
+        if (res.action === 'sendChat') {
+            res.chatStory.forEach((message) => {
+                updateHtml += `<div>${message.text}</div>`
+            });
+            $('#messages').html(updateHtml);
+        }
     }
 };
 
 function setUserActions() {
-    $('#onlineUsersList').find('li').click((el) => {
+    $('#onlineUsersList').find('li').click(function () {
+        let userobj = $(this).find('span');
+        selectedUser = userobj.attr('userid');
         $('#onlineUsersList').find('li').find('span')
             .css("background-color", "white")
             .css("cursor", "pointer")
-        el.target.style.backgroundColor = 'blue';
+        userobj.css("background-color", "blue")
+        webSocket.send(JSON.stringify({
+            action: 'startChat',
+            uid: selectedUser
+        }));
     });
 }
+
+window.onload = function() {
+    $('#sendMessage').click(function () {
+        webSocket.send(JSON.stringify({
+            action: 'sendChat',
+            text: $('#messageInput').val(),
+            uid: selectedUser
+        }));
+        $('#messageInput').val('');
+    });
+};
