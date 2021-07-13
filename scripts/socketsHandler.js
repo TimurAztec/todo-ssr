@@ -28,7 +28,6 @@ function SocketsHandler(webSocketServer) {
                     }
                     if (res.action === 'sendChat' && cookies['sessionId']) {
                         sendChat(cookies['sessionId'], res.uid, res.text).then((chatStory) => {
-                            console.log(chatStory);
                             client.send(JSON.stringify({action: 'sendChat', chatStory}));
                         });
                     }
